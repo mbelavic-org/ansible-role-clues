@@ -1,4 +1,5 @@
-- template: src=vnodes.j2 dest="/etc/clues2/kubernetes_vnodes.info"
+- name: Generate vnodes files
+  template: src=vnodes.j2 dest="/etc/clues2/kubernetes_vnodes.info"
 
 - name: Set Kubernetes as CLUES2 LRMS
   ini_file: dest=/etc/clues2/clues2.cfg section=general option=LRMS_CLASS value=cluesplugins.kubernetes

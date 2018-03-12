@@ -1,5 +1,4 @@
 {% set vars = {"count": 1, "nodes": []} %}
-{% set found = [false] %}
 {% for system in SYSTEMS %}
 {% if 'ec3_node_type' in system and system['ec3_node_type'] == 'wn' %}
 {% for n in range(system['ec3_max_instances_max']) %}
@@ -10,8 +9,8 @@
 {% if 'memory.size_min' in system %}
 {% set _dummy = node.update({"memory": system['memory.size_min']}) %}
 {% endif %}
-{% if 'ec3_node_queue_name' in system %}
-{% set _dummy = node.update({"queue": system['ec3_node_queue_name']}) %}
+{% if 'ec3_node_queues_list' in system %}
+{% set _dummy = node.update({"queues": system['ec3_node_queues_list']}) %}
 {% endif %}
 {% if 'ec3_node_keyworks' in system %}
 {% set _dummy = node.update({"keyworks": system['ec3_node_keyworks']}) %}
@@ -21,10 +20,9 @@
 {% endfor %}
 {% endif %}
 {% endfor %}
-{% if vars["nodes"] %}
-{{ vars["nodes"]|to_nice_json }}
-{% else %}
-{% for n in range(NNODES) %}
-{{vnode_prefix}}{{n}}.localdomain
+{% if not vars["nodes"] %}
+{% for n in range(NNODES|int) %}
+{% set _dummy = vars.update({'nodes': vars["nodes"] + ["%s%d.localdomain" % (vnode_prefix, n)]}) %}
 {% endfor %}
 {% endif %}
+{{ vars["nodes"]|to_nice_json }}
