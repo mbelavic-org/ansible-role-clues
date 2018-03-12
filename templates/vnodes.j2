@@ -2,12 +2,12 @@
 {% for system in SYSTEMS %}
 {% if 'ec3_node_type' in system and system['ec3_node_type'] == 'wn' %}
 {% for n in range(system['ec3_max_instances_max']) %}
-{% set node = {"name": "vnode_prefix%s.localdomain" % vars["count"], "cpu": 1, "memory": "512M"} %}
+{% set node = {"name": "%s%d.localdomain" % (vnode_prefix,vars["count"]), "cpu": 1, "memory": "512M"} %}
 {% if 'cpu.count_min' in system %}
 {% set _dummy = node.update({"cpu": system['cpu.count_min']}) %}
 {% endif %}
 {% if 'memory.size_min' in system %}
-{% set _dummy = node.update({"memory": system['memory.size_min']}) %}
+{% set _dummy = node.update({"memory": "%dM" % system['memory.size_min']}) %}
 {% endif %}
 {% if 'ec3_node_queues_list' in system %}
 {% set _dummy = node.update({"queues": system['ec3_node_queues_list']}) %}
