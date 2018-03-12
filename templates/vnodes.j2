@@ -22,7 +22,8 @@
 {% endfor %}
 {% if not vars["nodes"] %}
 {% for n in range(NNODES|int) %}
-{% set _dummy = vars.update({'nodes': vars["nodes"] + ["%s%d.localdomain" % (vnode_prefix, n)]}) %}
+{% set node = {"name": "%s%d.localdomain" % (vnode_prefix, n)} %}
+{% set _dummy = vars.update({'nodes': vars["nodes"] + [node]}) %}
 {% endfor %}
 {% endif %}
 {{ vars["nodes"]|to_nice_json }}
