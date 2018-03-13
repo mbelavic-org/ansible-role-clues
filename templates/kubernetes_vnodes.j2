@@ -12,8 +12,8 @@
       {%- if 'ec3_node_queues_list' in system -%}
         {%- set _dummy = node.update({"queues": system['ec3_node_queues_list']}) -%}
       {%- endif -%}
-      {%- if 'ec3_node_keyworks' in system -%}
-        {%- set _dummy = node.update({"keyworks": system['ec3_node_keyworks']}) -%}
+      {%- if 'ec3_node_keywords' in system -%}
+        {%- set _dummy = node.update({"keywords": system['ec3_node_keywords']}) -%}
       {%- endif -%}
       {%- set _dummy = vars.update({'nodes': vars["nodes"] + [node]}) -%}
       {%- set _dummy = vars.update({'count': vars["count"] + 1}) -%}
