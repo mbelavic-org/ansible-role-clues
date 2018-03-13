@@ -1,9 +1,5 @@
-- copy:
-    content: |
-        {% for number in range(1, NNODES|int + 1) %}
-        {{vnode_prefix}}{{number}}.localdomain
-        {% endfor %}
-    dest: "/etc/clues2/kubernetes_vnodes.info"
+- name: Generate vnodes files
+  template: src=kubernetes_vnodes.j2 dest="/etc/clues2/kubernetes_vnodes.info"
 
 - name: Set Kubernetes as CLUES2 LRMS
   ini_file: dest=/etc/clues2/clues2.cfg section=general option=LRMS_CLASS value=cluesplugins.kubernetes
