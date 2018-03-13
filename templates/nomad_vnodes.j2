@@ -2,7 +2,7 @@
 {%- for system in SYSTEMS -%}
   {%- if 'ec3_node_type' in system and system['ec3_node_type'] == 'wn' -%}
     {%- for n in range(system['ec3_max_instances_max']) -%}
-      {%- set node = {"name": "%s%d.localdomain" % (vnode_prefix,vars["count"]), "cpu": 1, "memory": "512M"} -%}
+      {%- set node = {"name": "%s%d" % (vnode_prefix,vars["count"]), "cpu": 1, "memory": "512M"} -%}
       {%- if 'cpu.count_min' in system -%}
         {%- set _dummy = node.update({"cpu": system['cpu.count_min']}) -%}
       {%- endif -%}
@@ -22,7 +22,7 @@
 {%- endfor -%}
 {%- if not vars["nodes"] -%}
   {%- for n in range(NNODES|int) -%}
-    {%- set node = {"name": "%s%d.localdomain" % (vnode_prefix, n)} -%}
+    {%- set node = {"name": "%s%d" % (vnode_prefix, n)} -%}
     {%- set _dummy = vars.update({'nodes': vars["nodes"] + [node]}) -%}
   {%- endfor -%}
 {%- endif -%}
