@@ -1,4 +1,4 @@
-+# CLUES MESOS configuration
+# CLUES MESOS configuration
 - name: Create mesos nodes info file
   template: src=mesos_vnodes.j2 dest="/etc/clues2/mesos_vnodes.info"
  
