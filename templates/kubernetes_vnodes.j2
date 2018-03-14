@@ -1,4 +1,4 @@
-{%- set vars = {"count": 1, "nodes": [], "current_system": "wn", "max_instances": NNODES|int} -%}
+{%- set vars = {"count": 1, "nodes": []} -%}
 {%- for system in SYSTEMS -%}
   {%- if 'ec3_node_type' in system and system['ec3_node_type'] == 'wn' -%}
     {%- for n in range(system['ec3_max_instances_max']) -%}
