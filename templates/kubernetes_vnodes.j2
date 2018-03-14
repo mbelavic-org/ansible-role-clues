@@ -1,4 +1,4 @@
-{%- set vars = {"count": 1, "nodes": []} -%}
+{%- set vars = {"count": 1, "nodes": [], "current_system": "wn", "max_instances": NNODES|int} -%}
 {%- for system in SYSTEMS -%}
   {%- if 'ec3_node_type' in system and system['ec3_node_type'] == 'wn' -%}
     {%- for n in range(system['ec3_max_instances_max']) -%}
@@ -21,7 +21,7 @@
   {%- endif -%}
 {%- endfor -%}
 {%- if not vars["nodes"] -%}
-  {%- for n in range(NNODES|int) -%}
+  {%- for n in range(1, NNODES|int + 1) -%}
     {%- set node = {"name": "%s%d.localdomain" % (vnode_prefix, n)} -%}
     {%- set _dummy = vars.update({'nodes': vars["nodes"] + [node]}) -%}
   {%- endfor -%}
