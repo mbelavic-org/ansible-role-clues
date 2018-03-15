@@ -1,3 +1,4 @@
+- set_fact: vnode_suffix = ".localdomain"
 - name: Generate vnodes files
   template: src=kubernetes_vnodes.j2 dest="/etc/clues2/kubernetes_vnodes.info"
 
