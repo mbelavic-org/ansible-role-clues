@@ -2,7 +2,7 @@
   pip: name=urllib3
 
 - name: Generate nomad_vnodes file
-  template: src=nomad_vnodes.j2 dest="/etc/clues2/nomad_vnodes.info"
+  template: src=vnodes.j2 dest="/etc/clues2/nomad_vnodes.info"
 
 # CLUES NOMAD configuration
 - ini_file: dest=/etc/clues2/clues2.cfg section=general option=LRMS_CLASS value=cluesplugins.nomad
