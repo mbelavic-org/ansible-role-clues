@@ -70,6 +70,8 @@
       - { section: 'general', option: 'CLUES_SECRET_TOKEN', value: '{{clues_secret_token}}' }
       - { section: 'client', option: 'CLUES_SECRET_TOKEN', value: '{{clues_secret_token}}' }
       - { section: 'client', option: 'CLUES_REQUEST_WAIT_TIMEOUT', value: '3000' }
+      - { section: 'scheduling', option: 'MAX_BOOTING_NODES', value: '{{ max_number_of_nodes }}' }
+
     notify: restart cluesd
 
   # CLUES2 IM plugin Config file
