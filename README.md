@@ -16,13 +16,16 @@ clues_secret_token: not_very_secret_token
 # Select between the following: torque, slurm, sge, condor, mesos
 clues_queue_system: slurm
 # Number of max worker nodes to deploy in the cluster
-ec3_max_instances: 5
+max_number_of_nodes: 5
 # Prefix applied to the elastic cluster worker nodes
 vnode_prefix: wn
 # Path for the authorization file used
 auth: auth.dat
-# Path for extra configuration files needed
-extract_proxy_file: extract_proxy.py
+# Class to use as power manager (POWERMANAGER_CLASS)
+clues_powermanager_class: cluesplugins.im
+# Set GitHub branch to install
+cpyutils_git_branch: master
+clues_git_branch: master
 ```
 
 Example Playbook
@@ -32,7 +35,7 @@ This an example of how to install a SLURM cluster with three nodes:
 ```
 - hosts: server
   roles:
-  - { role: 'grycap.clues', clues_queue_system: 'slurm', ec3_max_instances: '3' }
+  - { role: 'grycap.clues', clues_queue_system: 'slurm', max_number_of_nodes: '3' }
 ```
 Contributing to the role
 ========================
