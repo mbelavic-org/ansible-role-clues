@@ -10,3 +10,6 @@ vnode_prefix: wn
 auth: auth.dat
 # Class to use as power manager (POWERMANAGER_CLASS)
 clues_powermanager_class: cluesplugins.im
+# Set GitHub branch to install
+cpyutils_git_branch: master
+clues_git_branch: master

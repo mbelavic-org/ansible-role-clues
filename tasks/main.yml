@@ -20,30 +20,25 @@
     - ply
     - radl
 
-  # Get CLUES2 and dependencies
-  - name: Retrieve cpyutils and clues from github
-    get_url: url=https://github.com/grycap/{{item}}/archive/master.zip dest=/tmp/{{item}}.zip force=no
-    register: result
-    until: result|success
-    retries: 5
-    delay: 1
-    with_items:
-    - cpyutils
-    - clues
-  
+  # Get CPYUtils
+  - name: Clone CPYUtils git repo
+    git:
+      repo: 'https://github.com/grycap/cpyutils.git'
+      dest: "/tmp/cpyutils-{{ cpyutils_git_branch }}"
+      version: "{{ cpyutils_git_branch }}"
 
-  # Unarchive CLUES2 and dependencies
-  - name: Unarchiving CLUES2 and cpyutils
-    unarchive: src=/tmp/{{item}}.zip dest=/tmp copy=no creates=/tmp/{{item}}-master
-    with_items:
-    - clues
-    - cpyutils
+  # Get CLUES2 repo
+  - name: Clone CLUES2 git repo
+    git:
+      repo: 'https://github.com/grycap/clues.git'
+      dest: "/tmp/clues-{{ clues_git_branch }}"
+      version: "{{ clues_git_branch }}"
 
   # CLUES2 installation
   - name: Install cpyutils
-    command: python setup.py install chdir=/tmp/cpyutils-master
+    command: python setup.py install chdir="/tmp/cpyutils-{{ cpyutils_git_branch }}"
   - name: Install CLUES2
-    command: python setup.py install chdir=/tmp/clues-master creates={{CLUES_SERVER_BINARY}}
+    command: python setup.py install chdir="/tmp/clues-{{ clues_git_branch }}" creates={{CLUES_SERVER_BINARY}}
 
   - name: Stop clues server
     command: systemctl stop cluesd

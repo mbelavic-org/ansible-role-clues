@@ -3,7 +3,7 @@
     yum: pkg=epel-release
 
   - name: Yum install CLUES2 requirements in RedHat
-    yum: pkg=unzip,python-pip update_cache=yes
+    yum: pkg=unzip,python-pip,git update_cache=yes
 
   - name: Pip install packages
     pip: name=sqlite3dbm,importlib

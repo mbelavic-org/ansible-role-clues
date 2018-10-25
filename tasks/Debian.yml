@@ -1,6 +1,6 @@
 ---
   - name: Apt install CLUES2 requirements in Deb system
-    apt: pkg=python-sqlite,unzip,python-pip update_cache=yes
+    apt: pkg=python-sqlite,unzip,python-pip,git update_cache=yes
 
   - name: Set clues facts
     set_fact: CLUES_SERVER_BINARY="/usr/local/bin/cluesserver"
