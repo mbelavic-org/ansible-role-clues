@@ -4,7 +4,7 @@
 {%- set vars = {"count": 1, "nodes": []} -%}
 {%- for system in SYSTEMS -%}
   {%- if 'ec3_node_type' in system and system['ec3_node_type'] == 'wn' -%}
-    {%- for n in range(system['ec3_max_instances_max']) -%}
+    {%- for n in range(system['max_number_of_nodes']) -%}
       {%- set node = {"name": "%s%d%s" % (vnode_prefix, vars["count"], vnode_suffix), "cpu": 1, "memory": "512M"} -%}
       {%- if 'cpu.count_min' in system -%}
         {%- set _dummy = node.update({"cpu": system['cpu.count_min']}) -%}
