@@ -39,3 +39,22 @@
   ini_file: dest=/etc/clues2/conf.d/plugin-kubernetes.cfg section=KUBERNETES option=KUBERNETES_NODE_PODS value={{KUBERNETES_NODE_PODS}}
   notify: restart cluesd
   when: KUBERNETES_NODE_PODS is defined  
+
+# Add hooks to drain first and delete after the kube nodes
+- name: Create Hooks configuration file for CLUES2
+  copy: src=/etc/clues2/conf.d/hooks.cfg-example dest=/etc/clues2/conf.d/hooks.cfg force=no
+  notify: restart cluesd
+
+- name: Create kube_drain.sh hook file for CLUES2
+  copy: src=kube_drain.sh dest=/etc/clues2/scripts force=no
+
+- name: Create kube_delete.sh hook file for CLUES2
+  copy: src=kube_delete.sh dest=/etc/clues2/scripts force=no
+
+- name: Set PRE_POWEROFF hook value
+  ini_file: dest=/etc/clues2/conf.d/hooks.cfg section=hooks option=PRE_POWEROFF value="./kube_drain.sh"
+  notify: restart cluesd
+
+- name: Set POST_POWEROFF hook value
+  ini_file: dest=/etc/clues2/conf.d/hooks.cfg section=hooks option=POST_POWEROFF value="./kube_delete.sh"
+  notify: restart cluesd
