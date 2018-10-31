@@ -46,10 +46,10 @@
   notify: restart cluesd
 
 - name: Create kube_drain.sh hook file for CLUES2
-  copy: src=kube_drain.sh dest=/etc/clues2/scripts force=no
+  copy: src=kube_drain.sh dest=/etc/clues2/scripts force=no mode='755'
 
 - name: Create kube_delete.sh hook file for CLUES2
-  copy: src=kube_delete.sh dest=/etc/clues2/scripts force=no
+  copy: src=kube_delete.sh dest=/etc/clues2/scripts force=no mode='755'
 
 - name: Set PRE_POWEROFF hook value
   ini_file: dest=/etc/clues2/conf.d/hooks.cfg section=hooks option=PRE_POWEROFF value="./kube_drain.sh"
