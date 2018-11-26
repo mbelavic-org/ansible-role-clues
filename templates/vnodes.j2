@@ -27,7 +27,7 @@
   {%- if max_number_of_nodes is not defined and NNODES is defined -%}
     {%- set max_number_of_nodes = NNODES -%}
   {%- endif -%}
-  {%- for n in range(1, NNODES|int + 1) -%}
+  {%- for n in range(1, max_number_of_nodes|int + 1) -%}
     {%- set node = {"name": "%s%d%s" % (vnode_prefix, n, vnode_suffix)} -%}
     {%- set _dummy = vars.update({'nodes': vars["nodes"] + [node]}) -%}
   {%- endfor -%}
