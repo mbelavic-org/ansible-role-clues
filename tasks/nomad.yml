@@ -23,6 +23,11 @@
   ini_file: dest=/etc/clues2/conf.d/plugin-nomad.cfg section=NOMAD option=NOMAD_DEFAULT_MEMORY_PER_NODE value={{NOMAD_DEFAULT_MEMORY_PER_NODE}}
   notify: restart cluesd
   when: NOMAD_DEFAULT_MEMORY_PER_NODE is defined
+- name: Set NOMAD_DEFAULT_CPU_GHZ value
+  ini_file: dest=/etc/clues2/conf.d/plugin-nomad.cfg section=NOMAD option=NOMAD_DEFAULT_CPU_GHZ value={{NOMAD_DEFAULT_CPU_GHZ}}
+  notify: restart cluesd
+  when: NOMAD_DEFAULT_CPU_GHZ is defined
+
 
 
 # NOMAD
