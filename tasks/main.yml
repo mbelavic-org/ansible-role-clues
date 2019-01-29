@@ -52,21 +52,18 @@
     copy: src=/etc/clues2/clues2.cfg-full-example dest=/etc/clues2/clues2.cfg force=no
     notify: restart cluesd
 
-  - name: Set CLUES2 config file values
+  - name: Set main CLUES2 config file values
     ini_file: dest=/etc/clues2/clues2.cfg section={{ item.section }} option={{ item.option }} value="{{ item.value }}"
     with_items:
       - { section: 'general', option: 'POWERMANAGER_CLASS', value: '{{clues_powermanager_class}}' }
-      - { section: 'scheduling', option: 'IDLE_TIME', value: '1800' }
-      - { section: 'scheduling', option: 'RECONSIDER_JOB_TIME', value: '120' }
-      - { section: 'monitoring', option: 'MAX_WAIT_POWERON', value: '3000' }
-      - { section: 'monitoring', option: 'MAX_WAIT_POWEROFF', value: '600' }
-      - { section: 'monitoring', option: 'PERIOD_LIFECYCLE', value: '10' }
-      - { section: 'monitoring', option: 'PERIOD_MONITORING_NODES', value: '2' }
       - { section: 'general', option: 'CLUES_SECRET_TOKEN', value: '{{clues_secret_token}}' }
       - { section: 'client', option: 'CLUES_SECRET_TOKEN', value: '{{clues_secret_token}}' }
-      - { section: 'client', option: 'CLUES_REQUEST_WAIT_TIMEOUT', value: '3000' }
       - { section: 'scheduling', option: 'MAX_BOOTING_NODES', value: '{{ max_number_of_nodes }}' }
+    notify: restart cluesd
 
+  - name: Set CLUES2 config file values
+    ini_file: dest=/etc/clues2/clues2.cfg section={{ item.section }} option={{ item.option }} value="{{ item.value }}"
+    with_items: "{{ clues_config_options }}"
     notify: restart cluesd
 
   # CLUES2 IM plugin Config file

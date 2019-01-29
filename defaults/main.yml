@@ -13,3 +13,12 @@ clues_powermanager_class: cluesplugins.im
 # Set GitHub branch to install
 cpyutils_git_branch: master
 clues_git_branch: master
+# CLUES options to be set in the clues2.cfg file
+clues_config_options:
+  - { section: 'scheduling', option: 'IDLE_TIME', value: '1800' }
+  - { section: 'scheduling', option: 'RECONSIDER_JOB_TIME', value: '120' }
+  - { section: 'monitoring', option: 'MAX_WAIT_POWERON', value: '3000' }
+  - { section: 'monitoring', option: 'MAX_WAIT_POWEROFF', value: '600' }
+  - { section: 'monitoring', option: 'PERIOD_LIFECYCLE', value: '10' }
+  - { section: 'monitoring', option: 'PERIOD_MONITORING_NODES', value: '2' }
+  - { section: 'client', option: 'CLUES_REQUEST_WAIT_TIMEOUT', value: '3000' }
