@@ -22,7 +22,3 @@ clues_config_options:
   - { section: 'monitoring', option: 'PERIOD_LIFECYCLE', value: '10' }
   - { section: 'monitoring', option: 'PERIOD_MONITORING_NODES', value: '2' }
   - { section: 'client', option: 'CLUES_REQUEST_WAIT_TIMEOUT', value: '3000' }
-  - { section: 'general', option: 'POWERMANAGER_CLASS', value: '{{clues_powermanager_class}}' }
-  - { section: 'general', option: 'CLUES_SECRET_TOKEN', value: '{{clues_secret_token}}' }
-  - { section: 'client', option: 'CLUES_SECRET_TOKEN', value: '{{clues_secret_token}}' }
-  - { section: 'scheduling', option: 'MAX_BOOTING_NODES', value: '{{ max_number_of_nodes }}' }

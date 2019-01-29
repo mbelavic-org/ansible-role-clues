@@ -52,6 +52,15 @@
     copy: src=/etc/clues2/clues2.cfg-full-example dest=/etc/clues2/clues2.cfg force=no
     notify: restart cluesd
 
+  - name: Set main CLUES2 config file values
+    ini_file: dest=/etc/clues2/clues2.cfg section={{ item.section }} option={{ item.option }} value="{{ item.value }}"
+    with_items:
+      - { section: 'general', option: 'POWERMANAGER_CLASS', value: '{{clues_powermanager_class}}' }
+      - { section: 'general', option: 'CLUES_SECRET_TOKEN', value: '{{clues_secret_token}}' }
+      - { section: 'client', option: 'CLUES_SECRET_TOKEN', value: '{{clues_secret_token}}' }
+      - { section: 'scheduling', option: 'MAX_BOOTING_NODES', value: '{{ max_number_of_nodes }}' }
+    notify: restart cluesd
+
   - name: Set CLUES2 config file values
     ini_file: dest=/etc/clues2/clues2.cfg section={{ item.section }} option={{ item.option }} value="{{ item.value }}"
     with_items: "{{ clues_config_options }}"
