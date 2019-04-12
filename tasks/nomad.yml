@@ -144,11 +144,13 @@
 - name: Set NOMAD_SERVER_CERT value
   ini_file: dest=/etc/clues2/conf.d/plugin-nomad.cfg section=NOMAD option=NOMAD_SERVER_CERT value={{NOMAD_SERVER_CERT}}
   notify: restart cluesd
-  when: NOMAD_SERVER_KEY is defined
+  when: NOMAD_SERVER_CERT is defined
+
 - name: Set NOMAD_SERVER_KEY value
-  ini_file: dest=/etc/clues2/conf.d/plugin-nomad.cfg section=NOMAD option=NOMAD_SERVER_CERT value={{NOMAD_SERVER_KEY}}
+  ini_file: dest=/etc/clues2/conf.d/plugin-nomad.cfg section=NOMAD option=NOMAD_SERVER_KEY value={{NOMAD_SERVER_KEY}}
   notify: restart cluesd
   when: NOMAD_SERVER_KEY is defined
+
 - name: Set NOMAD_CA_CERT value
   ini_file: dest=/etc/clues2/conf.d/plugin-nomad.cfg section=NOMAD option=NOMAD_CA_CERT value={{NOMAD_CA_CERT}}
   notify: restart cluesd
