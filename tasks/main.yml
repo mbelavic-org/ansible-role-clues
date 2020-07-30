@@ -16,9 +16,13 @@
   - name: Install CLUES2 pip requirements
     pip: name={{item}} state=latest executable=pip
     with_items:
-    - web.py
     - ply
     - radl
+
+  - name: Install CLUES2 pip requirements
+    pip:
+      name: web.py==0.51
+      executable: pip
 
   # Get CPYUtils
   - name: Clone CPYUtils git repo
