@@ -20,6 +20,7 @@
     with_items:
     - ply
     - radl
+    - more-itertools==7.2
     - web.py==0.51
 
   - name: Install CLUES2 pip requirements
@@ -28,6 +29,7 @@
     with_items:
     - ply
     - radl
+    - more-itertools==7.2
     - web.py==0.51
 
   # Get CPYUtils
