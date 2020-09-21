@@ -14,15 +14,23 @@
     include: "{{ansible_os_family}}.yml"
 
   - name: Install CLUES2 pip requirements
-    pip: name={{item}} state=latest executable=pip
+    pip:
+      name: "{{item}}"
+      executable: pip
     with_items:
     - ply
     - radl
+    - more-itertools==7.2
+    - web.py==0.51
 
   - name: Install CLUES2 pip requirements
     pip:
-      name: web.py==0.51
-      executable: pip
+      name: "{{item}}"
+    with_items:
+    - ply
+    - radl
+    - more-itertools==7.2
+    - web.py==0.51
 
   # Get CPYUtils
   - name: Clone CPYUtils git repo
