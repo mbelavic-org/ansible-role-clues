@@ -29,7 +29,7 @@
     with_items:
     - ply
     - radl
-    - more-itertools==7.2
+    - more-itertools==5.0
     - web.py==0.51
 
   # Get CPYUtils
