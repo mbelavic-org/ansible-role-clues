@@ -6,4 +6,5 @@
     - name: "Include grycap.clues"
       include_role:
         name: "ansible-role-clues"
-
+      vars:
+        clues_queue_system: kubernetes

@@ -8,7 +8,7 @@
   notify: restart cluesd
 
 - name: Create Kubernetes plugin configuration file for CLUES2
-  copy: src=/etc/clues2/conf.d/plugin-kubernetes.cfg-example dest=/etc/clues2/conf.d/plugin-kubernetes.cfg force=no
+  copy: src=/etc/clues2/conf.d/plugin-kubernetes.cfg-example dest=/etc/clues2/conf.d/plugin-kubernetes.cfg force=no remote_src=yes
   notify: restart cluesd
 
 - name: Set Insecure KUBERNETES_SERVER value
@@ -53,7 +53,7 @@
 
 # Add hooks to drain first and delete after the kube nodes
 - name: Create Hooks configuration file for CLUES2
-  copy: src=/etc/clues2/conf.d/hooks.cfg-example dest=/etc/clues2/conf.d/hooks.cfg force=no
+  copy: src=/etc/clues2/conf.d/hooks.cfg-example dest=/etc/clues2/conf.d/hooks.cfg force=no remote_src=yes
   notify: restart cluesd
 
 - name: Create kube_drain.sh hook file for CLUES2
