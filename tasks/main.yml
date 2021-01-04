@@ -16,7 +16,7 @@
   - name: Install CLUES2 pip requirements
     pip:
       name: "{{item}}"
-      executable: pip
+      executable: pip2
     with_items:
     - ply
     - radl
@@ -26,6 +26,7 @@
   - name: Install CLUES2 pip requirements
     pip:
       name: "{{item}}"
+      executable: pip3
     with_items:
     - ply
     - radl
