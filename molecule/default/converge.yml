@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+ 
+    - name: "Include grycap.clues"
+      include_role:
+        name: "ansible-role-clues"
+
