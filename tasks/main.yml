@@ -13,6 +13,12 @@
   - name: Include "{{ansible_os_family}}" CLUES2 requirements
     include: "{{ansible_os_family}}.yml"
 
+  - name: Link python
+    file:
+      src: /usr/bin/python2
+      dest: /usr/bin/python
+      state: link
+
   - name: Install CLUES2 pip2 requirements
     pip:
       name: 

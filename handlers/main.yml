@@ -5,4 +5,4 @@
   #service: name=cluesd state=restarted
 
 - name: restart cluesd
-  shell: service cluesd stop; service cluesd start
+  command: service cluesd restart
