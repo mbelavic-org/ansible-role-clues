@@ -17,9 +17,8 @@ jobs:
     strategy:
       matrix:
         distro:
-          - centos8
           - centos7
-          - ubuntu2004
+          - centos6
           - ubuntu1804
           - ubuntu1604
 
