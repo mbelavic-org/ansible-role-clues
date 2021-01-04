@@ -3,10 +3,10 @@
     yum: pkg=epel-release
 
   - name: Yum install CLUES2 requirements in RedHat
-    yum: pkg=unzip,python-pip,git update_cache=yes
+    yum: pkg=unzip,python2-pip,python2-setuptools,git update_cache=yes
 
   - name: Pip install packages
-    pip: name=sqlite3dbm,importlib
+    pip: name=sqlite3dbm,importlib executable=pip2
 
   - name: Set clues facts
     set_fact: CLUES_SERVER_BINARY="/usr/bin/cluesserver"

@@ -13,27 +13,14 @@
   - name: Include "{{ansible_os_family}}" CLUES2 requirements
     include: "{{ansible_os_family}}.yml"
 
-  - name: Install CLUES2 pip requirements
+  - name: Install CLUES2 pip2 requirements
     pip:
-      name: "{{item}}"
-      executable: pip3
-    with_items:
-    - ply
-    - radl
-    - more-itertools==5.0
-    - web.py==0.51
-    when: ansible_python.version.major > 2
-
-  - name: Install CLUES2 pip requirements
-    pip:
-      name: "{{item}}"
+      name: 
+        - ply
+        - radl
+        - more-itertools==5.0
+        - web.py==0.51
       executable: pip2
-    with_items:
-    - ply
-    - radl
-    - more-itertools==5.0
-    - web.py==0.51
-    when: ansible_python.version.major < 3
 
   # Get CPYUtils
   - name: Clone CPYUtils git repo
@@ -51,9 +38,9 @@
 
   # CLUES2 installation
   - name: Install cpyutils
-    command: python setup.py install chdir="/tmp/cpyutils-{{ cpyutils_git_branch }}"
+    command: python2 setup.py install chdir="/tmp/cpyutils-{{ cpyutils_git_branch }}"
   - name: Install CLUES2
-    command: python setup.py install chdir="/tmp/clues-{{ clues_git_branch }}" creates={{CLUES_SERVER_BINARY}}
+    command: python2 setup.py install chdir="/tmp/clues-{{ clues_git_branch }}" creates={{CLUES_SERVER_BINARY}}
 
   - name: Stop clues server
     command: systemctl stop cluesd
