@@ -26,6 +26,7 @@
         - radl
         - more-itertools==5.0
         - web.py==0.51
+        - requests
       executable: pip2
 
   # Get CPYUtils
