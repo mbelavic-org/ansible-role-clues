@@ -8,3 +8,4 @@
         name: "ansible-role-clues"
       vars:
         clues_queue_system: kubernetes
+        auth: "id = test; proxy = ----proxy----"
