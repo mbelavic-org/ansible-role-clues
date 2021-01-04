@@ -112,5 +112,5 @@
 
 # This fixes a problem with the CLUES service in Centos 7
 - name: Kill and restart clues service (Centos 7 only)
-  shell: pgrep cluesserver | xargs kill && service cluesd start
+  shell: pgrep cluesserver && pgrep cluesserver | xargs kill && service cluesd start
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 7
