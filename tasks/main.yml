@@ -13,24 +13,21 @@
   - name: Include "{{ansible_os_family}}" CLUES2 requirements
     include: "{{ansible_os_family}}.yml"
 
-  - name: Install CLUES2 pip requirements
-    pip:
-      name: "{{item}}"
-      executable: pip
-    with_items:
-    - ply
-    - radl
-    - more-itertools==5.0
-    - web.py==0.51
+  - name: Link python
+    file:
+      src: /usr/bin/python2
+      dest: /usr/bin/python
+      state: link
 
-  - name: Install CLUES2 pip requirements
+  - name: Install CLUES2 pip2 requirements
     pip:
-      name: "{{item}}"
-    with_items:
-    - ply
-    - radl
-    - more-itertools==5.0
-    - web.py==0.51
+      name: 
+        - ply
+        - radl
+        - more-itertools==5.0
+        - web.py==0.51
+        - requests
+      executable: pip2
 
   # Get CPYUtils
   - name: Clone CPYUtils git repo
@@ -48,9 +45,9 @@
 
   # CLUES2 installation
   - name: Install cpyutils
-    command: python setup.py install chdir="/tmp/cpyutils-{{ cpyutils_git_branch }}"
+    command: python2 setup.py install chdir="/tmp/cpyutils-{{ cpyutils_git_branch }}"
   - name: Install CLUES2
-    command: python setup.py install chdir="/tmp/clues-{{ clues_git_branch }}" creates={{CLUES_SERVER_BINARY}}
+    command: python2 setup.py install chdir="/tmp/clues-{{ clues_git_branch }}" creates={{CLUES_SERVER_BINARY}}
 
   - name: Stop clues server
     command: systemctl stop cluesd
@@ -61,65 +58,68 @@
     file: path=/etc/clues2 state=directory mode=755
 
   - name: Create CLUES2 config file
-    copy: src=/etc/clues2/clues2.cfg-full-example dest=/etc/clues2/clues2.cfg force=no
+    copy: src=/etc/clues2/clues2.cfg-full-example dest=/etc/clues2/clues2.cfg force=no remote_src=yes
     notify: restart cluesd
-
-  - name: Set main CLUES2 config file values
-    ini_file: dest=/etc/clues2/clues2.cfg section={{ item.section }} option={{ item.option }} value="{{ item.value }}"
-    with_items:
-      - { section: 'general', option: 'POWERMANAGER_CLASS', value: '{{clues_powermanager_class}}' }
-      - { section: 'general', option: 'CLUES_SECRET_TOKEN', value: '{{clues_secret_token}}' }
-      - { section: 'client', option: 'CLUES_SECRET_TOKEN', value: '{{clues_secret_token}}' }
-      - { section: 'scheduling', option: 'MAX_BOOTING_NODES', value: '{{ max_number_of_nodes }}' }
-    notify: restart cluesd
-
-  - name: Set CLUES2 config file values
-    ini_file: dest=/etc/clues2/clues2.cfg section={{ item.section }} option={{ item.option }} value="{{ item.value }}"
-    with_items: "{{ clues_config_options }}"
-    notify: restart cluesd
-
-  # CLUES2 IM plugin Config file
-  - name: Create EC3 directory
-    file: path=/usr/local/ec3 state=directory mode=755
-
-  - name: Create auth file
-    copy:
-      dest: /usr/local/ec3/auth.dat
-      content: "{{auth}}"
-      force: no
-
-  - name: Copy 'extract_proxy' file
-    copy: dest=/tmp/extract_proxy.py src=extract_proxy.py mode=0755 force=no
-
-  - name: Extract proxy information
-    command: /tmp/extract_proxy.py creates=/usr/local/ec3/proxy.pem
-    ignore_errors: yes
-    run_once: true
-
-  - name: Create IM plugin configuration file for CLUES2
-    copy: src=/etc/clues2/conf.d/plugin-im.cfg-example dest=/etc/clues2/conf.d/plugin-im.cfg force=no
-    notify: restart cluesd
-
-  - name: Set IM plugin configuration file values
-    ini_file: dest=/etc/clues2/conf.d/plugin-im.cfg section="IM VIRTUAL CLUSTER" option={{ item.option }} value="{{ item.value }}"
-    with_items:
-      - { option: 'IM_VIRTUAL_CLUSTER_AUTH_DATA_FILE', value: '/usr/local/ec3/auth.dat' }
-      - { option: 'IM_VIRTUAL_CLUSTER_DROP_FAILING_VMS', value: '600' }
-    notify: restart cluesd
-
-  # CLUES IM configuration
-  - name: Set EC3 folder rights
-    file: path=/usr/local/ec3 state=directory mode=755
-
-  # CLUES LRMS configuration
-  - name: Configuring the elastic cluster to use "{{clues_queue_system}}" LRMS
-    include: "{{clues_queue_system}}.yml"
-
-  - service: name=cluesd state=started enabled=yes
-
-  # This fixes a problem with the CLUES service in Centos 7
-  - name: Kill and restart clues service (Centos 7 only)
-    shell: pgrep cluesserver | xargs kill && service cluesd start
-    when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 7
 
   when: not clues_installed.stat.exists
+
+
+- name: Set main CLUES2 config file values
+  ini_file: dest=/etc/clues2/clues2.cfg section={{ item.section }} option={{ item.option }} value="{{ item.value }}"
+  with_items:
+    - { section: 'general', option: 'POWERMANAGER_CLASS', value: '{{clues_powermanager_class}}' }
+    - { section: 'general', option: 'CLUES_SECRET_TOKEN', value: '{{clues_secret_token}}' }
+    - { section: 'client', option: 'CLUES_SECRET_TOKEN', value: '{{clues_secret_token}}' }
+    - { section: 'scheduling', option: 'MAX_BOOTING_NODES', value: '{{ max_number_of_nodes }}' }
+  notify: restart cluesd
+
+- name: Set CLUES2 config file values
+  ini_file: dest=/etc/clues2/clues2.cfg section={{ item.section }} option={{ item.option }} value="{{ item.value }}"
+  with_items: "{{ clues_config_options }}"
+  notify: restart cluesd
+
+# CLUES2 IM plugin Config file
+- name: Create EC3 directory
+  file: path=/usr/local/ec3 state=directory mode=755
+
+- name: Create auth file
+  copy:
+    dest: /usr/local/ec3/auth.dat
+    content: "{{auth}}"
+    force: no
+
+- name: Copy 'extract_proxy' file
+  copy: dest=/tmp/extract_proxy.py src=extract_proxy.py mode=0755 force=no
+
+- name: Extract proxy information
+  command: /tmp/extract_proxy.py creates=/usr/local/ec3/proxy.pem
+  ignore_errors: yes
+
+- name: Create IM plugin configuration file for CLUES2
+  copy: src=/etc/clues2/conf.d/plugin-im.cfg-example dest=/etc/clues2/conf.d/plugin-im.cfg force=no remote_src=yes
+  notify: restart cluesd
+
+- name: Set IM plugin configuration file values
+  ini_file: dest=/etc/clues2/conf.d/plugin-im.cfg section="IM VIRTUAL CLUSTER" option={{ item.option }} value="{{ item.value }}"
+  with_items:
+    - { option: 'IM_VIRTUAL_CLUSTER_AUTH_DATA_FILE', value: '/usr/local/ec3/auth.dat' }
+    - { option: 'IM_VIRTUAL_CLUSTER_DROP_FAILING_VMS', value: '600' }
+  notify: restart cluesd
+
+# CLUES IM configuration
+- name: Set EC3 folder rights
+  file: path=/usr/local/ec3 state=directory mode=755
+
+# CLUES LRMS configuration
+- name: Configuring the elastic cluster to use "{{clues_queue_system}}" LRMS
+  include: "{{clues_queue_system}}.yml"
+
+- name: Start CLUES service
+  service: name=cluesd state=started enabled=yes
+
+# This fixes a problem with the CLUES service in Centos 7
+- name: Kill and restart clues service (Centos 7 only)
+  shell: pgrep cluesserver && pgrep cluesserver | xargs kill && service cluesd start
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 7
+  ignore_errors: yes
+  changed_when: false

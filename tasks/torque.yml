@@ -22,7 +22,7 @@
   notify: restart cluesd
 
 - name: Set initial CLUES pbs plugin configuration
-  copy: src=/etc/clues2/conf.d/plugin-pbs.cfg-example dest=/etc/clues2/conf.d/plugin-pbs.cfg force=no
+  copy: src=/etc/clues2/conf.d/plugin-pbs.cfg-example dest=/etc/clues2/conf.d/plugin-pbs.cfg force=no remote_src=yes
   notify: restart cluesd
 
 - name: Configure CLUES torque plugin

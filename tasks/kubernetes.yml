@@ -8,17 +8,28 @@
   notify: restart cluesd
 
 - name: Create Kubernetes plugin configuration file for CLUES2
-  copy: src=/etc/clues2/conf.d/plugin-kubernetes.cfg-example dest=/etc/clues2/conf.d/plugin-kubernetes.cfg force=no
+  copy: src=/etc/clues2/conf.d/plugin-kubernetes.cfg-example dest=/etc/clues2/conf.d/plugin-kubernetes.cfg force=no remote_src=yes
   notify: restart cluesd
 
-- name: Set KUBERNETES_SERVER value
+- name: Set Insecure KUBERNETES_SERVER value
   ini_file: dest=/etc/clues2/conf.d/plugin-kubernetes.cfg section=KUBERNETES option=KUBERNETES_SERVER value="http://localhost:8080"
   notify: restart cluesd
-  
+  when: KUBERNETES_TOKEN is not defined
+
+- name: Set Secure KUBERNETES_SERVER value
+  ini_file: dest=/etc/clues2/conf.d/plugin-kubernetes.cfg section=KUBERNETES option=KUBERNETES_SERVER value="https://localhost:6443"
+  notify: restart cluesd
+  when: KUBERNETES_TOKEN is defined
+
+- name: Set KUBERNETES_TOKEN value
+  ini_file: dest=/etc/clues2/conf.d/plugin-kubernetes.cfg section=KUBERNETES option=KUBERNETES_TOKEN value={{KUBERNETES_TOKEN}}
+  notify: restart cluesd
+  when: KUBERNETES_TOKEN is defined
+
 - name: Set KUBERNETES_PODS_API_URL_PATH value 
   ini_file: dest=/etc/clues2/conf.d/plugin-kubernetes.cfg section=KUBERNETES option=KUBERNETES_PODS_API_URL_PATH value={{KUBERNETES_PODS_API_URL_PATH}}
   notify: restart cluesd
-  when: KUBERNETES_PODS_API_URL_PATH is defined  
+  when: KUBERNETES_PODS_API_URL_PATH is defined
 
 - name: Set KUBERNETES_NODES_API_URL_PATH value 
   ini_file: dest=/etc/clues2/conf.d/plugin-kubernetes.cfg section=KUBERNETES option=KUBERNETES_NODES_API_URL_PATH value={{KUBERNETES_NODES_API_URL_PATH}}
@@ -42,7 +53,7 @@
 
 # Add hooks to drain first and delete after the kube nodes
 - name: Create Hooks configuration file for CLUES2
-  copy: src=/etc/clues2/conf.d/hooks.cfg-example dest=/etc/clues2/conf.d/hooks.cfg force=no
+  copy: src=/etc/clues2/conf.d/hooks.cfg-example dest=/etc/clues2/conf.d/hooks.cfg force=no remote_src=yes
   notify: restart cluesd
 
 - name: Create kube_drain.sh hook file for CLUES2
