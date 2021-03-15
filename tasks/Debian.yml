@@ -1,19 +1,9 @@
 ---
   - name: Apt install CLUES2 requirements in Deb system
-    apt: pkg=python-sqlite,unzip,python-setuptools,git,wget update_cache=yes
+    apt: pkg=unzip,git,wget update_cache=yes
 
   - name: Apt install pip in Deb
-    apt: pkg=python-pip
-    when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int < 20
-
-  - name: Install setuptools Py3
-    package: name=python3-setuptools
-    when: ansible_python.version.major > 2
-    ignore_errors: yes
-
-  - name: Install pip in Ubuntu 20+
-    shell: wget https://bootstrap.pypa.io/get-pip.py && python2 get-pip.py warn=false creates=/usr/local/bin/pip2 chdir=/tmp
-    when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 20
+    apt: pkg=python3-pip,python3-setuptools
 
   - name: Set clues facts
     set_fact: CLUES_SERVER_BINARY="/usr/local/bin/cluesserver"
