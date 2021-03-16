@@ -4,6 +4,10 @@
 
   - name: Apt install pip3 in Deb
     apt: pkg=python3-pip,python3-setuptools
+    when: python_version.stdout|int >= 3 or ansible_python_version is version('3', '>=')
+
+  - name: Apt install pip3 in Deb
+    apt: pkg=python3-pip,python3-setuptools
     when: python_version.stdout|int >= 3
 
   - name: Apt install pip2 in Deb
