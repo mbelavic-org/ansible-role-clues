@@ -9,3 +9,7 @@
       vars:
         clues_queue_system: kubernetes
         auth: "id = test; proxy = ----proxy----"
+
+    - name: test
+      command: clues status
+      changed_when: false

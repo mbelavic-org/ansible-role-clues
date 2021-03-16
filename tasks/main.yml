@@ -1,23 +1,26 @@
 ---
 # Add a fast check to speed reconfiguration
 - set_fact: CLUES_PATH=/usr/local/bin/clues
-  when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian" or (ansible_os_family == "RedHat" and ansible_distribution_major_version|int > 7)
 
 - set_fact: CLUES_PATH=/usr/bin/clues
-  when: ansible_os_family == "RedHat"
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int <= 7
 
 - stat: path={{CLUES_PATH}}
   register: clues_installed
 
+- name: Link python 3 or 2 in case is needed
+  shell: ls /usr/bin/python || { ls /usr/bin/python3 && ln -s /usr/bin/python3 /usr/bin/python; } || { ls /usr/bin/python2 && ln -s /usr/bin/python2 /usr/bin/python; }
+  changed_when: false
+
+- name: Check Python version
+  command: python -c 'import sys; print(sys.version_info[0])'
+  register: python_version
+  changed_when: false
+
 - block:
   - name: Include "{{ansible_os_family}}" CLUES2 requirements
     include: "{{ansible_os_family}}.yml"
-
-  - name: Link python
-    file:
-      src: /usr/bin/python2
-      dest: /usr/bin/python
-      state: link
 
   - name: Install CLUES2 pip2 requirements
     pip:
@@ -28,7 +31,19 @@
         - web.py==0.51
         - requests
       executable: pip2
+    when: python_version.stdout|int < 3
 
+  - name: Install CLUES2 requirements
+    pip:
+      name: 
+        - ply
+        - radl
+        - more-itertools
+        - web.py
+        - requests
+      executable: pip3
+    when: python_version.stdout|int >= 3
+  
   # Get CPYUtils
   - name: Clone CPYUtils git repo
     git:
@@ -44,10 +59,19 @@
       version: "{{ clues_git_branch }}"
 
   # CLUES2 installation
-  - name: Install cpyutils
-    command: python2 setup.py install chdir="/tmp/cpyutils-{{ cpyutils_git_branch }}"
-  - name: Install CLUES2
-    command: python2 setup.py install chdir="/tmp/clues-{{ clues_git_branch }}" creates={{CLUES_SERVER_BINARY}}
+  - block:
+    - name: Install cpyutils py3
+      command: python3 setup.py install chdir="/tmp/cpyutils-{{ cpyutils_git_branch }}"
+    - name: Install CLUES2
+      command: python3 setup.py install chdir="/tmp/clues-{{ clues_git_branch }}" creates={{CLUES_SERVER_BINARY}}
+    when: python_version.stdout|int >= 3
+
+  - block:
+    - name: Install cpyutils py2
+      command: python2 setup.py install chdir="/tmp/cpyutils-{{ cpyutils_git_branch }}"
+    - name: Install CLUES2
+      command: python2 setup.py install chdir="/tmp/clues-{{ clues_git_branch }}" creates={{CLUES_SERVER_BINARY}}
+    when: python_version.stdout|int < 3
 
   - name: Stop clues server
     command: systemctl stop cluesd
