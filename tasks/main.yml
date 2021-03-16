@@ -14,7 +14,7 @@
   changed_when: false
 
 - name: Check Python version
-  raw: python -c 'import sys; print(sys.version_info[1])'
+  command: python -c 'import sys; print(sys.version_info[0])'
   register: python_version
   changed_when: false
 
@@ -59,10 +59,19 @@
       version: "{{ clues_git_branch }}"
 
   # CLUES2 installation
-  - name: Install cpyutils
-    command: python3 setup.py install chdir="/tmp/cpyutils-{{ cpyutils_git_branch }}"
-  - name: Install CLUES2
-    command: python3 setup.py install chdir="/tmp/clues-{{ clues_git_branch }}" creates={{CLUES_SERVER_BINARY}}
+  - block:
+    - name: Install cpyutils
+      command: python3 setup.py install chdir="/tmp/cpyutils-{{ cpyutils_git_branch }}"
+    - name: Install CLUES2
+      command: python3 setup.py install chdir="/tmp/clues-{{ clues_git_branch }}" creates={{CLUES_SERVER_BINARY}}
+    when: python_version.stdout|int >= 3
+
+  - block:
+    - name: Install cpyutils
+      command: python2 setup.py install chdir="/tmp/cpyutils-{{ cpyutils_git_branch }}"
+    - name: Install CLUES2
+      command: python2 setup.py install chdir="/tmp/clues-{{ clues_git_branch }}" creates={{CLUES_SERVER_BINARY}}
+    when: python_version.stdout|int < 3
 
   - name: Stop clues server
     command: systemctl stop cluesd
