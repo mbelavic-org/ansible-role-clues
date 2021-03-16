@@ -18,8 +18,8 @@
       name: 
         - ply
         - radl
-        - more-itertools==5.0
-        - web.py==0.51
+        - more-itertools
+        - web.py
         - requests
       executable: pip3
       
