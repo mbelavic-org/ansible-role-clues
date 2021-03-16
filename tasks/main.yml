@@ -21,7 +21,8 @@
         - more-itertools==5.0
         - web.py==0.51
         - requests
-
+      executable: pip3
+      
   # Get CPYUtils
   - name: Clone CPYUtils git repo
     git:
