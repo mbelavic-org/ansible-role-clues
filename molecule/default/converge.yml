@@ -12,3 +12,4 @@
 
     - name: test
       command: clues status
+      changed_when: false
