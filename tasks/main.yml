@@ -9,6 +9,10 @@
 - stat: path={{CLUES_PATH}}
   register: clues_installed
 
+- name: Link python 3 or 2 in case is needed
+  command: ls /usr/bin/python || { ls /usr/bin/python3 && ln -s /usr/bin/python3 /usr/bin/python; } || { ls /usr/bin/python2 && ln -s /usr/bin/python2 /usr/bin/python; }
+  changed_when: false
+
 - name: Check Python version
   raw: python -c 'import sys; print(sys.version_info[1])'
   register: python_version
