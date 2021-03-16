@@ -2,8 +2,13 @@
   - name: Apt install CLUES2 requirements in Deb system
     apt: pkg=unzip,git,wget update_cache=yes
 
-  - name: Apt install pip in Deb
+  - name: Apt install pip3 in Deb
     apt: pkg=python3-pip,python3-setuptools
+    when: python_version.stdout|int >= 3
+
+  - name: Apt install pip2 in Deb
+    apt: pkg=python-pip,python-setuptools,python-sqlite
+    when: python_version.stdout|int < 3
 
   - name: Set clues facts
     set_fact: CLUES_SERVER_BINARY="/usr/local/bin/cluesserver"

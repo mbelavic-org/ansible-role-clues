@@ -9,9 +9,25 @@
 - stat: path={{CLUES_PATH}}
   register: clues_installed
 
+- name: Check Python version
+  raw: python -c 'import sys; print(sys.version_info[1])'
+  register: python_version
+  changed_when: false
+
 - block:
   - name: Include "{{ansible_os_family}}" CLUES2 requirements
     include: "{{ansible_os_family}}.yml"
+
+  - name: Install CLUES2 pip2 requirements
+    pip:
+      name: 
+        - ply
+        - radl
+        - more-itertools==5.0
+        - web.py==0.51
+        - requests
+      executable: pip2
+    when: python_version.stdout|int < 3
 
   - name: Install CLUES2 requirements
     pip:
@@ -22,7 +38,8 @@
         - web.py
         - requests
       executable: pip3
-      
+    when: python_version.stdout|int >= 3
+  
   # Get CPYUtils
   - name: Clone CPYUtils git repo
     git:
