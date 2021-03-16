@@ -7,5 +7,6 @@
       include_role:
         name: "ansible-role-clues"
       vars:
+        clues_git_branch: py3_dev
         clues_queue_system: kubernetes
         auth: "id = test; proxy = ----proxy----"
