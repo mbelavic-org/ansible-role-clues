@@ -30,6 +30,7 @@
         - more-itertools==5.0
         - web.py==0.51
         - requests
+        - PyYAML
       executable: pip2
     when: python_version.stdout|int < 3
 
@@ -41,6 +42,7 @@
         - more-itertools
         - web.py
         - requests
+        - PyYAML
       executable: pip3
     when: python_version.stdout|int >= 3
   
