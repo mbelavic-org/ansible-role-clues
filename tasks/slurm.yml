@@ -15,6 +15,11 @@
     SCONTROL_BIN: "/usr/bin/scontrol"
   when: ansible_os_family == "RedHat"
 
+- name: Set SLURM conf facts for CentOS 8
+  set_fact:
+    CLUES_SLURM_WRAPPER: "/usr/local/bin/clues-slurm-wrapper"
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 8
+
 - name: Start SLURM service
   command: slurmctld
 
