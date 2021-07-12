@@ -1,24 +1,30 @@
-- name: Set SLURM conf facts for Debian
+- name: Set SBATCH_BINARY fact
   set_fact:
-    SBATCH_BINARY: "/usr/local/bin/sbatch"
-    SBATCH_BACKUP: "/usr/local/bin/sbatch.o"
-    CLUES_SLURM_WRAPPER: "/usr/local/bin/clues-slurm-wrapper"
-    SCONTROL_BIN: "/usr/local/bin/scontrol"
-    SLURM_SERVICE: "slurmctld"
-  when: ansible_os_family == "Debian"
+    SBATCH_BINARY: "{{item}}"
+  with_first_found:
+    - files:
+      - "/usr/bin/sbatch"
+      - "/usr/local/bin/sbatch"
 
-- name: Set SLURM conf facts for CentOS
+- name: Set SCONTROL_BIN fact
   set_fact:
-    SBATCH_BINARY: "/usr/bin/sbatch"
-    SBATCH_BACKUP: "/usr/bin/sbatch.o"
-    CLUES_SLURM_WRAPPER: "/usr/bin/clues-slurm-wrapper"
-    SCONTROL_BIN: "/usr/bin/scontrol"
-  when: ansible_os_family == "RedHat"
+    SCONTROL_BIN: "{{item}}"
+  with_first_found:
+    - files:
+      - "/usr/bin/scontrol"
+      - "/usr/local/bin/scontrol"
 
-- name: Set SLURM conf facts for CentOS 8
+- name: Set SBATCH_BACKUP fact
   set_fact:
-    CLUES_SLURM_WRAPPER: "/usr/local/bin/clues-slurm-wrapper"
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 8
+    SBATCH_BACKUP: "{{SBATCH_BINARY}}.o"
+
+- name: Set CLUES_SLURM_WRAPPER fact
+  set_fact:
+    CLUES_SLURM_WRAPPER: "{{item}}"
+  with_first_found:
+    - files:
+      - "/usr/bin/clues-slurm-wrapper"
+      - "/usr/local/bin/clues-slurm-wrapper"
 
 - name: Start SLURM service
   command: slurmctld
