@@ -6,9 +6,12 @@
   {%- for system in SYSTEMS -%}
     {%- if 'ec3_node_type' in system and system['ec3_node_type'] == 'wn' -%}
       {%- for n in range(system['ec3_max_instances_max']) -%}
-        {%- set node = {"name": "%s%d%s" % (vnode_prefix, vars["count"], vnode_suffix), "cpu": 1, "memory": "512M"} -%}
+        {%- set node = {"name": "%s%d%s" % (vnode_prefix, vars["count"], vnode_suffix), "cpu": 1, "memory": "512M", "gpu": 0} -%}
         {%- if 'cpu.count_min' in system -%}
           {%- set _dummy = node.update({"cpu": system['cpu.count_min']}) -%}
+        {%- endif -%}
+        {%- if 'gpu.count_min' in system -%}
+          {%- set _dummy = node.update({"gpu": system['gpu.count_min']}) -%}
         {%- endif -%}
         {%- if 'memory.size_min' in system -%}
           {%- set _dummy = node.update({"memory": "%dM" % system['memory.size_min']}) -%}
