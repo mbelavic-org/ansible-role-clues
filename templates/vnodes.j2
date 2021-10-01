@@ -13,6 +13,9 @@
         {%- if 'gpu.count_min' in system -%}
           {%- set _dummy = node.update({"gpu": system['gpu.count_min']}) -%}
         {%- endif -%}
+        {%- if 'gpu.vendor' in system -%}
+          {%- set _dummy = node.update({"gpu_vendor": system['gpu.vendor']}) -%}
+        {%- endif -%}
         {%- if 'memory.size_min' in system -%}
           {%- set _dummy = node.update({"memory": "%dM" % system['memory.size_min']}) -%}
         {%- endif -%}
