@@ -28,6 +28,12 @@
         {%- if 'ec3_node_keywords' in system -%}
           {%- set _dummy = node.update({"keywords": system['ec3_node_keywords']}) -%}
         {%- endif -%}
+        {%- if 'cpu.sgx' in system -%}
+          {%- set _dummy = node.update({"sgx": system['cpu.sgx']}) -%}
+        {%- endif -%}
+        {%- if 'cpu.sgx.epc_size' in system -%}
+          {%- set _dummy = node.update({"sgx_epc_size": system['cpu.sgx.epc_size']}) -%}
+        {%- endif -%}
         {%- set _dummy = vars.update({'nodes': vars["nodes"] + [node]}) -%}
         {%- set _dummy = vars.update({'count': vars["count"] + 1}) -%}
       {%- endfor -%}
