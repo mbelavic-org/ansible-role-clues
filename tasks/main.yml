@@ -28,12 +28,6 @@
   - set_fact: pip_exec=pip3
     when: python_version.stdout|int >= 3
 
-  - name: Install CLUES2 data files
-    pip:
-      name: git+https://github.com/grycap/clues.git@{{ clues_git_branch }}
-      extra_args: --no-binary=clues
-      executable: "{{pip_exec}}"
-
   - name: Install CLUES2
     pip:
       name: 
