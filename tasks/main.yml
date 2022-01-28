@@ -22,13 +22,19 @@
   - name: Include "{{ansible_os_family}}" CLUES2 requirements
     include: "{{ansible_os_family}}.yml"
 
-  - name: Create a directory /etc/clues2
-    file:
-      path: /etc/clues2
-      state: directory
-      mode: '0750'
+  - set_fact: pip_exec=pip2
+    when: python_version.stdout|int < 3
 
-  - name: Install CLUES2 pip2
+  - set_fact: pip_exec=pip3
+    when: python_version.stdout|int >= 3
+
+  - name: Install CLUES2 data files
+    pip:
+      name: git+https://github.com/grycap/clues.git@{{ clues_git_branch }}
+      extra_args: --no-binary=clues
+      executable: "{{pip_exec}}"
+
+  - name: Install CLUES2
     pip:
       name: 
         - ply
@@ -39,22 +45,7 @@
         - PyYAML
         - git+https://github.com/grycap/cpyutils.git@{{ cpyutils_git_branch }}
         - git+https://github.com/grycap/clues.git@{{ clues_git_branch }}
-      executable: pip2
-    when: python_version.stdout|int < 3
-
-  - name: Install CLUES2
-    pip:
-      name: 
-        - ply
-        - radl
-        - more-itertools
-        - web.py
-        - requests
-        - PyYAML
-        - git+https://github.com/grycap/cpyutils.git@{{ cpyutils_git_branch }}
-        - git+https://github.com/grycap/clues.git@{{ clues_git_branch }}
-      executable: pip3
-    when: python_version.stdout|int >= 3
+      executable: "{{pip_exec}}"
 
   - name: Stop clues server
     command: systemctl stop cluesd
