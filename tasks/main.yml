@@ -119,8 +119,8 @@
   service: name=cluesd state=started enabled=yes
 
 # This fixes a problem with the CLUES service in Centos 7
-- name: Kill and restart clues service (Centos 7 only)
-  shell: pgrep cluesserver && pgrep cluesserver | xargs kill && service cluesd start
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 7
-  ignore_errors: yes
-  changed_when: false
+#- name: Kill and restart clues service (Centos 7 only)
+#  shell: pgrep -f cluesserver && pgrep -f cluesserver | xargs kill ; service cluesd start
+#  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 7
+#  ignore_errors: yes
+#  changed_when: false
