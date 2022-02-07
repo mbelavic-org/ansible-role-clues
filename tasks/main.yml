@@ -28,7 +28,7 @@
   - set_fact: pip_exec=pip3
     when: python_version.stdout|int >= 3
 
-  - name: Install CLUES2
+  - name: Install CLUES2 deps
     pip:
       name: 
         - ply
@@ -38,7 +38,17 @@
         - requests
         - PyYAML
         - git+https://github.com/grycap/cpyutils.git@{{ cpyutils_git_branch }}
-        - git+https://github.com/grycap/clues.git@{{ clues_git_branch }}
+      executable: "{{pip_exec}}"
+
+  - name: Install CLUES2 conf files
+    pip:
+      name: git+https://github.com/grycap/clues.git@{{ clues_git_branch }}
+      executable: "{{pip_exec}}"
+      extra_args: --no-binary clues
+
+  - name: Install CLUES2
+    pip:
+      name: git+https://github.com/grycap/clues.git@{{ clues_git_branch }}
       executable: "{{pip_exec}}"
 
   - name: Stop clues server
