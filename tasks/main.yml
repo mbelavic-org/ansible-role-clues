@@ -37,6 +37,7 @@
         - web.py==0.51
         - requests
         - PyYAML
+        - distro
         - git+https://github.com/grycap/cpyutils.git@{{ cpyutils_git_branch }}
       executable: "{{pip_exec}}"
 
