@@ -21,6 +21,11 @@
   notify: restart cluesd
   when: KUBERNETES_TOKEN is defined
 
+- name: Set Secure KUBERNETES_SERVER value
+  ini_file: dest=/etc/clues2/conf.d/plugin-kubernetes.cfg section=KUBERNETES option=KUBERNETES_SERVER value={{CUSTOM_KUBERNETES_SERVER}}
+  notify: restart cluesd
+  when: CUSTOM_KUBERNETES_SERVER is defined
+  
 - name: Set KUBERNETES_TOKEN value
   ini_file: dest=/etc/clues2/conf.d/plugin-kubernetes.cfg section=KUBERNETES option=KUBERNETES_TOKEN value={{KUBERNETES_TOKEN}}
   notify: restart cluesd
