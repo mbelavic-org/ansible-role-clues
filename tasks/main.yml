@@ -36,8 +36,8 @@
         - jaraco.functools==3.4.0
         - more-itertools==5.0
         - web.py==0.51
-        - requests
-        - PyYAML
+        - requests==2.15.1
+        - PyYAML==5.4.1
         - distro
         - git+https://github.com/grycap/cpyutils.git@{{ cpyutils_git_branch }}
       executable: "{{pip_exec}}"
