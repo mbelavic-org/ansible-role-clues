@@ -33,6 +33,7 @@
       name: 
         - ply
         - radl
+        - jaraco.functools==3.4.0
         - more-itertools==5.0
         - web.py==0.51
         - requests
