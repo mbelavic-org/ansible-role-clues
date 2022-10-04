@@ -41,7 +41,21 @@
         - distro
         - git+https://github.com/grycap/cpyutils.git@{{ cpyutils_git_branch }}
       executable: "{{pip_exec}}"
-
+    when: python_version.stdout|int < 3
+  
+  - name: Install CLUES2 deps
+    pip:
+      name: 
+        - ply
+        - radl
+        - web.py
+        - requests
+        - PyYAML
+        - distro
+        - git+https://github.com/grycap/cpyutils.git@{{ cpyutils_git_branch }}
+      executable: "{{pip_exec}}"
+    when: python_version.stdout|int >= 3
+  
   - name: Install CLUES2 conf files
     pip:
       name: git+https://github.com/grycap/clues.git@{{ clues_git_branch }}
