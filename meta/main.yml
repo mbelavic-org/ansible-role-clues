@@ -1,5 +1,6 @@
 galaxy_info:
   role_name: clues
+  namespace: grycap
   author: alpegon3@upv.es
   description: Install Clues
   company: GRyCAP
