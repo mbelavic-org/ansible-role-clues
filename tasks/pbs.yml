@@ -1,0 +1,50 @@
+# CLUES PBS configuration
+- name: Set pbs facts
+  set_fact:
+    TORQUE_PATH: "/var/spool/pbs"
+    TORQUE_SERVICE: "pbs"
+    CLUES_PBS_WRAPPER: "/usr/local/bin/clues-pbs-wrapper"
+  when: ansible_os_family == "Debian"
+
+- name: Set torque facts
+  set_fact:
+    TORQUE_PATH: "/var/spool/pbs"
+    TORQUE_SERVICE: "pbs"
+    CLUES_PBS_WRAPPER: "/usr/bin/clues-pbs-wrapper"
+  when: ansible_os_family == "RedHat"
+
+- name: Set Torque as CLUES LRMS
+  ini_file: dest=/etc/clues2/clues2.cfg section=general option=LRMS_CLASS value=cluesplugins.pbs
+  notify: restart cluesd
+
+- name: Set initial CLUES pbs plugin configuration
+  copy: src=/etc/clues2/conf.d/plugin-pbs.cfg-example dest=/etc/clues2/conf.d/plugin-pbs.cfg force=no remote_src=yes
+  notify: restart cluesd
+
+- name: Configure CLUES torque plugin
+  ini_file: dest=/etc/clues2/conf.d/plugin-pbs.cfg section=PBS option=PBS_SERVER value=pbsserver
+  notify: restart cluesd
+
+#- name: Add configuration line to torque config file
+#  lineinfile: dest={{TORQUE_PATH}}/torque.cfg regexp=^SUBMITFILTER line='SUBMITFILTER {{CLUES_PBS_WRAPPER}}' create=yes mode=644
+
+- name: Create torque nodes
+  copy:
+    content: |
+       {% for number in range(1, max_number_of_nodes|int + 1) %}
+       {{vnode_prefix}}{{number}}
+       {% endfor %}
+    dest: "{{TORQUE_PATH}}/server_priv/nodes"
+
+- name: Stop '{{TORQUE_SERVICE}}' service
+  service: name={{TORQUE_SERVICE}} state=stopped pattern=/usr/sbin/pbs_server
+- name: Start '{{TORQUE_SERVICE}}' service
+  service: name={{TORQUE_SERVICE}} state=started pattern=/usr/sbin/pbs_server
+
+# Many times pbs_server does not start properly. Wait and test it again
+- name: Sleep 5 seconds
+  command: sleep 5
+
+- name: Start '{{TORQUE_SERVICE}}' service (again)
+  service: name={{TORQUE_SERVICE}} state=started pattern=/usr/sbin/pbs_server
+  notify: restart cluesd
