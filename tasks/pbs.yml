@@ -36,6 +36,11 @@
        {% endfor %}
     dest: "{{TORQUE_PATH}}/server_priv/nodes"
 
+- name: Download custom openpbs clues plugin
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/belavicm/clues/master/cluesplugins/openpbs.py
+    dest: /usr/local/lib/python3.6/site-packages/cluesplugins/pbs.py
+
 - name: Stop '{{TORQUE_SERVICE}}' service
   service: name={{TORQUE_SERVICE}} state=stopped pattern=/usr/sbin/pbs_server
 - name: Start '{{TORQUE_SERVICE}}' service
