@@ -24,6 +24,14 @@
 - name: Configure CLUES torque plugin
   ini_file: dest=/etc/clues2/conf.d/plugin-pbs.cfg section=PBS option=PBS_SERVER value=pbsserver
   notify: restart cluesd
+  
+- name: Configure CLUES torque plugin PBS_QSTAT_COMMAND
+  ini_file: dest=/etc/clues2/conf.d/plugin-pbs.cfg section=PBS option=PBS_QSTAT_COMMAND value=/opt/pbs/bin/qstat
+  notify: restart cluesd
+  
+- name: Configure CLUES torque plugin PBS_PBSNODES_COMMAND
+  ini_file: dest=/etc/clues2/conf.d/plugin-pbs.cfg section=PBS option=PBS_PBSNODES_COMMAND value=/opt/pbs/bin/pbsnodes
+  notify: restart cluesd
 
 #- name: Add configuration line to torque config file
 #  lineinfile: dest={{TORQUE_PATH}}/torque.cfg regexp=^SUBMITFILTER line='SUBMITFILTER {{CLUES_PBS_WRAPPER}}' create=yes mode=644
