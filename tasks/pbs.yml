@@ -1,19 +1,19 @@
 # CLUES PBS configuration
 - name: Set pbs facts
   set_fact:
-    TORQUE_PATH: "/var/spool/pbs"
-    TORQUE_SERVICE: "pbs"
+    PBS_PATH: "/var/spool/pbs"
+    PBS_SERVICE: "pbs"
     CLUES_PBS_WRAPPER: "/usr/local/bin/clues-pbs-wrapper"
   when: ansible_os_family == "Debian"
 
-- name: Set torque facts
+- name: Set pbs facts
   set_fact:
-    TORQUE_PATH: "/var/spool/pbs"
-    TORQUE_SERVICE: "pbs"
+    PBS_PATH: "/var/spool/pbs"
+    PBS_SERVICE: "pbs"
     CLUES_PBS_WRAPPER: "/usr/bin/clues-pbs-wrapper"
   when: ansible_os_family == "RedHat"
 
-- name: Set Torque as CLUES LRMS
+- name: Set PBS as CLUES LRMS
   ini_file: dest=/etc/clues2/clues2.cfg section=general option=LRMS_CLASS value=cluesplugins.pbs
   notify: restart cluesd
 
@@ -21,28 +21,28 @@
   copy: src=/etc/clues2/conf.d/plugin-pbs.cfg-example dest=/etc/clues2/conf.d/plugin-pbs.cfg force=no remote_src=yes
   notify: restart cluesd
 
-- name: Configure CLUES torque plugin
+- name: Configure CLUES pbs plugin
   ini_file: dest=/etc/clues2/conf.d/plugin-pbs.cfg section=PBS option=PBS_SERVER value=pbsserver
   notify: restart cluesd
   
-- name: Configure CLUES torque plugin PBS_QSTAT_COMMAND
+- name: Configure CLUES pbs plugin PBS_QSTAT_COMMAND
   ini_file: dest=/etc/clues2/conf.d/plugin-pbs.cfg section=PBS option=PBS_QSTAT_COMMAND value=/opt/pbs/bin/qstat
   notify: restart cluesd
   
-- name: Configure CLUES torque plugin PBS_PBSNODES_COMMAND
+- name: Configure CLUES pvs plugin PBS_PBSNODES_COMMAND
   ini_file: dest=/etc/clues2/conf.d/plugin-pbs.cfg section=PBS option=PBS_PBSNODES_COMMAND value=/opt/pbs/bin/pbsnodes
   notify: restart cluesd
 
-#- name: Add configuration line to torque config file
-#  lineinfile: dest={{TORQUE_PATH}}/torque.cfg regexp=^SUBMITFILTER line='SUBMITFILTER {{CLUES_PBS_WRAPPER}}' create=yes mode=644
+#- name: Add configuration line to pbs config file
+#  lineinfile: dest={{PBS_PATH}}/pbs.cfg regexp=^SUBMITFILTER line='SUBMITFILTER {{CLUES_PBS_WRAPPER}}' create=yes mode=644
 
-- name: Create torque nodes
+- name: Create pbs nodes
   copy:
     content: |
        {% for number in range(1, max_number_of_nodes|int + 1) %}
        {{vnode_prefix}}{{number}}
        {% endfor %}
-    dest: "{{TORQUE_PATH}}/server_priv/nodes"
+    dest: "{{PBS_PATH}}/server_priv/nodes"
 
 #- name: Download custom openpbs clues plugin
 #  ansible.builtin.get_url:
@@ -52,15 +52,15 @@
 - name: Copy 'pbs_server.conf' file
   copy: dest=/usr/local/lib/python3.6/site-packages/cluesplugins/pbs.py src=openpbs.py mode=0644    
 
-- name: Stop '{{TORQUE_SERVICE}}' service
-  service: name={{TORQUE_SERVICE}} state=stopped pattern=/usr/sbin/pbs_server
-- name: Start '{{TORQUE_SERVICE}}' service
-  service: name={{TORQUE_SERVICE}} state=started pattern=/usr/sbin/pbs_server
+- name: Stop '{{PBS_SERVICE}}' service
+  service: name={{PBS_SERVICE}} state=stopped pattern=/usr/sbin/pbs_server
+- name: Start '{{PBS_SERVICE}}' service
+  service: name={{PBS_SERVICE}} state=started pattern=/usr/sbin/pbs_server
 
 # Many times pbs_server does not start properly. Wait and test it again
 - name: Sleep 5 seconds
   command: sleep 5
 
-- name: Start '{{TORQUE_SERVICE}}' service (again)
-  service: name={{TORQUE_SERVICE}} state=started pattern=/usr/sbin/pbs_server
+- name: Start '{{PBS_SERVICE}}' service (again)
+  service: name={{PBS_SERVICE}} state=started pattern=/usr/sbin/pbs_server
   notify: restart cluesd
