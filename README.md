@@ -13,8 +13,8 @@ Role Variables
 The variables that can be passed to this role and a brief description about them are as follows.
 ```
 clues_secret_token: not_very_secret_token
-# Select between the following: torque, slurm, sge, condor, mesos
-clues_queue_system: slurm
+# Select between the following: torque, slurm, sge, condor, mesos, pbs
+clues_queue_system: pbs
 # Number of max worker nodes to deploy in the cluster
 max_number_of_nodes: 5
 # Prefix applied to the elastic cluster worker nodes
